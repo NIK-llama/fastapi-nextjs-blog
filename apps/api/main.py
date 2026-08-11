@@ -1,9 +1,10 @@
 import os
 from contextlib import asynccontextmanager
+from typing import Annotated
 
 from config import settings
-from database import engine
-from fastapi import FastAPI, Request
+from database import engine, get_db
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.exception_handlers import (
     http_exception_handler,
     request_validation_exception_handler,
@@ -12,6 +13,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from routers import posts, users
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 
@@ -53,11 +56,19 @@ app.include_router(posts.router, prefix="/api/posts", tags=["posts"])
 
 @app.get("/health", tags=["health"])
 @app.get("/api/health", tags=["health"])
-async def health_check():
+async def health_check(db: Annotated[AsyncSession, Depends(get_db)]):
+    try:
+        await db.execute(text("SELECT 1"))
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Database unavailable",
+        ) from exc
     return {
         "status": "healthy",
         "service": "FastAPI Blog Backend",
     }
+
 
 
 @app.exception_handler(StarletteHTTPException)
