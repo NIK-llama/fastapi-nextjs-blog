@@ -50,7 +50,7 @@ export const Navbar: React.FC = () => {
                 Home
               </Link>
               <a
-                href="http://localhost:8000/docs"
+                href="https://fastapi-nextjs-blog.onrender.com/docs"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-3.5 py-2 text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-muted/60 rounded-xl transition-colors flex items-center gap-1.5"
@@ -180,7 +180,7 @@ export const Navbar: React.FC = () => {
               Home
             </Link>
             <a
-              href="http://localhost:8000/docs"
+              href="https://fastapi-nextjs-blog.onrender.com/docs"
               target="_blank"
               rel="noopener noreferrer"
               className="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-muted"
