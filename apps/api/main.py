@@ -56,14 +56,15 @@ app.include_router(posts.router, prefix="/api/posts", tags=["posts"])
 
 @app.get("/health", tags=["health"])
 @app.get("/api/health", tags=["health"])
-async def health_check(db: Annotated[AsyncSession, Depends(get_db)]):
-    try:
-        await db.execute(text("SELECT 1"))
-    except Exception as exc:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Database unavailable",
-        ) from exc
+async def health_check():
+    # Database check commented out to preserve Neon compute limits (e.g. from UptimeRobot pings)
+    # try:
+    #     await db.execute(text("SELECT 1"))
+    # except Exception as exc:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+    #         detail="Database unavailable",
+    #     ) from exc
     return {
         "status": "healthy",
         "service": "FastAPI Blog Backend",
